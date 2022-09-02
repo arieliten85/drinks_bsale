@@ -1,0 +1,265 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+}
+
+.home {
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+}
+.home:hover {
+    color: gray;
+  }
+body {
+  background: rgb(241, 240, 240);
+}
+
+/* NAVEGACION */
+
+nav {
+  position: fixed;
+  width: 100%;
+
+  background: black;
+  margin-bottom: 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.itemLogo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+}
+
+.itemLogo h2 {
+  color: white;
+}
+
+.contenedorBars {
+  padding: 5px;
+  width: 50px;
+  border: black solid;
+}
+
+.itemNav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+.itemNav ul {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+li {
+  padding: 10px;
+  cursor: pointer;
+  text-transform: uppercase;
+  width: max-content;
+  color: white;
+  font-weight: 900;
+  font-size: 14px;
+}
+li:hover {
+  color: gray;
+}
+
+.bars {
+  display: block;
+  font-size: 25px;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.close {
+  display: none;
+  font-size: 25px;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.menuSmall {
+  text-align: center;
+  position: absolute;
+  top: 130px;
+  left: -100%;
+  width: 100%;
+  transition: all 0.5s ease;
+
+  background: black;
+  display: flex;
+  flex-direction: column;
+}
+
+.active {
+  left: 0;
+}
+
+/* CONTENEDOR */
+.contenedor {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  justify-items: center;
+  align-items: center;
+  gap: 2em;
+  width: 75%;
+  padding: 10px;
+
+  margin: 0 auto;
+
+  padding-top: 200px;
+}
+.card {
+  background: white;
+
+  width: 230px;
+}
+
+.card:hover {
+  -webkit-box-shadow: -1px 0px 16px 1px rgba(171, 162, 171, 1);
+  -moz-box-shadow: -1px 0px 16px 1px rgba(171, 162, 171, 1);
+  box-shadow: -1px 0px 16px 1px rgba(171, 162, 171, 1);
+  cursor: pointer;
+}
+
+.contenedorImg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.img {
+  background: red;
+  background-image: url("https://us.123rf.com/450wm/pavelstasevich/pavelstasevich1811/pavelstasevich181101032/112815935-no-hay-icono-de-imagen-disponible-ilustraci%C3%B3n-vectorial-plana.jpg?ver=6");
+  background-size: cover;
+
+  height: 170px;
+}
+
+.card h3 {
+  font-size: 15px;
+  text-align: center;
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+.card p {
+  text-align: center;
+  font-size: 15px;
+}
+
+.ButtonBuy a {
+  color: white;
+  font-weight: 900;
+}
+
+.ButtonBuy {
+  text-align: center;
+  font-size: 15px;
+  background: black;
+  padding: 5px;
+  margin: 20px;
+  border-radius: 20px;
+}
+
+.ocultar {
+  display: none;
+}
+
+.itemSearch {
+  
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+#buscar {
+  height: 30px;
+  width: 100%;
+  border-radius: 20px;
+  border: none;
+  padding-left: 10px;
+}
+
+.buttonSearch {
+  color: rgb(255, 251, 251);
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.buttonSearch:hover {
+    color: gray;
+  }
+
+
+
+@media (min-width: 1280px) {
+  .contenedorBars {
+    display: none;
+  }
+  .bars {
+    display: none;
+  }
+  nav {
+    padding: 20px;
+    flex-direction: row;
+
+    justify-content: space-between;
+  }
+  .menuSmall {
+    text-align: center;
+    position: static;
+
+    width: 70% !important;
+
+    display: flex;
+    flex-direction: row;
+  }
+
+  .itemNav {
+    width: 80% !important;
+    padding: 0;
+  }
+
+  .itemSearch {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+    width:30% !important;
+  }
+
+  .itemNav ul {
+    padding: 0px;
+  }
+
+  .contenedor {
+    padding-top: 150px;
+  }
+
+
+}
+
+
+/*# sourceMappingURL=/styles.8986bff4.css.map */
