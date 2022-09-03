@@ -12,6 +12,20 @@ routes.get("/product", (req, res) => {
   });
 });
 
+routes.get("/product/:id", (req, res) => {
+  pool.query(
+    "SELECT * FROM product WHERE id = ?",
+    [req.params.id],
+    (error, filas) => {
+      if (error) {
+        throw error;
+      } else {
+        res.send(filas);
+      }
+    }
+  );
+});
+
 routes.get("/category", (req, res) => {
   pool.query("SELECT * FROM category", (error, filas) => {
     if (error) {

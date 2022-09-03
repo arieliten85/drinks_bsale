@@ -12,8 +12,8 @@
   cursor: pointer;
 }
 .home:hover {
-    color: gray;
-  }
+  color: gray;
+}
 body {
   background: rgb(241, 240, 240);
 }
@@ -186,7 +186,6 @@ li:hover {
 }
 
 .itemSearch {
-  
   position: relative;
   width: 100%;
   display: flex;
@@ -209,10 +208,8 @@ li:hover {
 }
 
 .buttonSearch:hover {
-    color: gray;
-  }
-
-
+  color: gray;
+}
 
 @media (min-width: 1280px) {
   .contenedorBars {
@@ -247,7 +244,7 @@ li:hover {
     flex-direction: row-reverse;
     justify-content: center;
     align-items: center;
-    width:30% !important;
+    width: 30% !important;
   }
 
   .itemNav ul {
@@ -257,8 +254,6 @@ li:hover {
   .contenedor {
     padding-top: 150px;
   }
-
-
 }
 
 

@@ -2674,17 +2674,61 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults.js","./cancel/Cancel":"node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"node_modules/axios/lib/helpers/isAxiosError.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"app.js":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"utils/querys.js":[function(require,module,exports) {
 "use strict";
 
-require("regenerator-runtime/runtime");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.allCategory = allCategory;
+exports.allProducts = allProducts;
+exports.oneCategory = oneCategory;
+exports.searchProducts = searchProducts;
 
 var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var url = "http://localhost:8080/api/product";
-var urlCat = "http://localhost:8080/api/category";
+//PRODUCTS
+function allProducts(fn) {
+  return _axios.default.get("http://localhost:8080/api/product").then(function (res) {
+    return fn(res.data);
+  }).catch(function (error) {
+    return console.log(error);
+  });
+}
+
+function searchProducts(fn, name) {
+  return _axios.default.get("http://localhost:8080/api/search/product/".concat(name)).then(function (res) {
+    return fn(res.data);
+  }).catch(function (error) {
+    return console.log(error);
+  });
+} //CATEGORY
+
+
+function allCategory(fn) {
+  return _axios.default.get("http://localhost:8080/api/category").then(function (res) {
+    return fn(res.data);
+  }).catch(function (error) {
+    return console.log(error);
+  });
+}
+
+function oneCategory(fn, id) {
+  return _axios.default.get("http://localhost:8080/api/category/".concat(id)).then(function (res) {
+    return fn(res.data);
+  }).catch(function (error) {
+    return console.log(error);
+  });
+}
+},{"axios":"node_modules/axios/index.js"}],"app.js":[function(require,module,exports) {
+"use strict";
+
+require("regenerator-runtime/runtime");
+
+var _querys = require("./utils/querys");
+
 var resultados = "";
 var resultadosCategorias = "";
 var contenedor = document.querySelector(".contenedor");
@@ -2698,39 +2742,27 @@ var starSearch = document.querySelector("#starSearch"); //BARS
 iconBars.addEventListener("click", function (e) {
   menu.classList.toggle("active");
   iconBars.classList.toggle("fa-close");
-}); //QUERY ALL PRODUCT
-
-_axios.default.get(url).then(function (res) {
-  return mostrarContenido(res.data);
-}).catch(function (error) {
-  return console.log(error);
 }); //RENDER ALL PRODUCT
-
 
 var mostrarContenido = function mostrarContenido(product) {
   if (product) {
     product.forEach(function (item) {
-      resultados += "    <div class=\"card itemCard\">\n\n                             <div class=\"contenedorImg\"> \n                               <img class=\"img\" src=".concat(item.url_image, ">\n                             </div>\n\n                              <div>\n                               <h3 class=\"titulo\">").concat(item.name, "</h3>\n                              </div>\n\n                             <div>\n                               <p> $ ").concat(item.price, "</p>\n                             </div>\n\n                             <div class=\"ButtonBuy\">\n                               <a href=\"#\">Comprar</a>\n                             </div>\n                         \n                       </div>\n                        ");
+      resultados += "    \n                         <div id=\"celda\" class=\"card  itemCard\">\n                             <div class=\"contenedorImg\"> \n                               <img class=\"img\" src=".concat(item.url_image, ">\n                             </div>\n                              <div>\n                               <h3 class=\"titulo\">").concat(item.name, "</h3>\n                              </div>\n                             <div>\n                               <p> $ ").concat(item.price, "</p>\n                             </div>\n\n                             <div class=\"ButtonBuy\">\n                               <a href=\"#\">Comprar</a>\n                             </div>\n                         </div>\n                      ");
     });
     contenedor.innerHTML = resultados;
   }
-}; //------------------->
-//QUERY ALL CATEGORY
+}; //QUERY ALL PRODUCT
 
 
-_axios.default.get(urlCat).then(function (res) {
-  return mostrarLinks(res.data);
-}).catch(function (error) {
-  return console.log(error);
-}); //RENDER ALL CATEGORY
-
+(0, _querys.allProducts)(mostrarContenido); //RENDER ALL CATEGORY
 
 var mostrarLinks = function mostrarLinks(cat) {
   cat.forEach(function (item) {
-    resultadosCategorias += "    \n                             <li id=\"".concat(item.id, "\" class=\"itemLink\">").concat(item.name, "</li>\n                        ");
+    resultadosCategorias += " <li id=\"".concat(item.id, "\" class=\"itemLink\">").concat(item.name, "</li> ");
   });
   contenedorNav.innerHTML = resultadosCategorias;
-  var itemLink = document.querySelectorAll("#nav li");
+  var itemLink = document.querySelectorAll("#nav li"); //RENDER CATEGORY SELECT
+
   itemLink.forEach(function (item) {
     item.addEventListener("click", function (e) {
       var id = e.target.id;
@@ -2738,75 +2770,51 @@ var mostrarLinks = function mostrarLinks(cat) {
       contenedor.innerHTML = "";
       menu.classList.toggle("active");
       iconBars.classList.toggle("fa-close");
-
-      _axios.default.get("http://localhost:8080/api/category/".concat(id)).then(function (res) {
-        return mostrarCategory(res.data);
-      }).catch(function (error) {
-        return console.log(error);
-      });
+      (0, _querys.oneCategory)(mostrarContenido, id);
+      mostrarContenido();
     });
-
-    var mostrarCategory = function mostrarCategory(product) {
-      product.forEach(function (item) {
-        resultados += "  \n                         <div id=\"celda\" class=\"card\">\n                             <div class=\"contenedorImg\"> \n                               \n                                <img class=\"img\" src=".concat(item.url_image, ">\n                              </div>\n                              <div>\n                                <h3 class=\"titulo\">").concat(item.name, "</h3>\n                              </div>\n                             <div>\n                             <p> $ ").concat(item.price, "</p>\n                               </div>\n\n                               <div class=\"ButtonBuy\">\n                               <a href=\"#\">Comprar</a>\n                           </div>\n                              </div>\n                            ");
-      });
-      contenedor.innerHTML = resultados;
-    };
   });
-}; //LOGO HOME
+}; //QUERY ALL CATEGORY
 
+
+(0, _querys.allCategory)(mostrarLinks); //BUTTON HOME
 
 iconHome.addEventListener("click", function () {
   resultados = "";
   contenedor.innerHTML = "";
-
-  _axios.default.get(url).then(function (res) {
-    return mostrarContenido(res.data);
-  }).catch(function (error) {
-    return console.log(error);
-  });
-
+  (0, _querys.allProducts)(mostrarContenido);
   mostrarContenido();
   menu.classList.toggle("active");
   iconBars.classList.toggle("fa-close");
-}); //BUSQUEDA HOME
+}); //SEARCH
 
 var texto;
 inputBuscar.addEventListener("keyup", function (e) {
   var valor = e.target.value;
   texto = new RegExp(valor, "i");
   var keycode = e.keyCode || e.which;
+  var name = texto.source;
 
-  if (keycode == 13) {
-    var name = texto.source;
+  if (keycode == 13 && texto !== undefined && texto !== " ") {
     resultados = "";
     contenedor.innerHTML = "";
-
-    _axios.default.get("http://localhost:8080/api/search/product/".concat(name)).then(function (res) {
-      return mostrarContenido(res.data);
-    }).catch(function (error) {
-      return console.log(error);
-    });
-
     inputBuscar.value = "";
+    (0, _querys.searchProducts)(mostrarContenido, name);
     mostrarContenido();
   }
 });
 starSearch.addEventListener("click", function () {
   var name = texto.source;
-  resultados = "";
-  contenedor.innerHTML = "";
 
-  _axios.default.get("http://localhost:8080/api/search/product/".concat(name)).then(function (res) {
-    return mostrarContenido(res.data);
-  }).catch(function (error) {
-    return console.log(error);
-  });
-
-  inputBuscar.value = "";
-  mostrarContenido();
+  if (texto !== undefined) {
+    resultados = "";
+    contenedor.innerHTML = "";
+    inputBuscar.value = "";
+    (0, _querys.searchProducts)(mostrarContenido, name);
+    mostrarContenido();
+  }
 });
-},{"regenerator-runtime/runtime":"node_modules/regenerator-runtime/runtime.js","axios":"node_modules/axios/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"node_modules/regenerator-runtime/runtime.js","./utils/querys":"utils/querys.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2834,7 +2842,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36271" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45433" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

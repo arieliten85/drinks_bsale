@@ -11,16 +11,12 @@ LA EMPRESA ME BRINDO UNA DB EN MYSQL DONDE MEDIANTE UNA PAUTAS TUBE QUE CONFECCI
 
 ## Correr el proyecto
 
-Una vez descargado, instalar las dependencias.
-
-### `npm install`
-
-Use este comando para correr el servidor del front:
-
+Para correr el servidor del FRONT desde la ruta BSALE/Front ejecute el comando:
+### `npm install` 
 ### `npm run dev`
 
-Use este comando para correr el servidor del back:
-
+Para correr el servidor del BACK desde la ruta BSALE/Back ejecute el comando: 
+### `npm install` 
 ### `npm run server`
 
 ## Screenshot

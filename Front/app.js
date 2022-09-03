@@ -1,8 +1,11 @@
 import "regenerator-runtime/runtime";
-import axios from "axios";
 
-const url = "http://localhost:8080/api/product";
-const urlCat = "http://localhost:8080/api/category";
+import {
+  allCategory,
+  allProducts,
+  oneCategory,
+  searchProducts,
+} from "./utils/querys";
 
 let resultados = "";
 let resultadosCategorias = "";
@@ -12,7 +15,6 @@ const inputBuscar = document.querySelector("#buscar");
 const menu = document.querySelector(".menuSmall");
 const iconBars = document.querySelector(".bars");
 const iconHome = document.querySelector("#home");
-
 const starSearch = document.querySelector("#starSearch");
 
 //BARS
@@ -21,26 +23,18 @@ iconBars.addEventListener("click", (e) => {
   iconBars.classList.toggle("fa-close");
 });
 
-//QUERY ALL PRODUCT
-axios
-  .get(url)
-  .then((res) => mostrarContenido(res.data))
-  .catch((error) => console.log(error));
-
 //RENDER ALL PRODUCT
 const mostrarContenido = (product) => {
   if (product) {
     product.forEach((item) => {
-      resultados += `    <div class="card itemCard">
-
+      resultados += `    
+                         <div id="celda" class="card  itemCard">
                              <div class="contenedorImg"> 
                                <img class="img" src=${item.url_image}>
                              </div>
-
                               <div>
                                <h3 class="titulo">${item.name}</h3>
                               </div>
-
                              <div>
                                <p> $ ${item.price}</p>
                              </div>
@@ -48,120 +42,78 @@ const mostrarContenido = (product) => {
                              <div class="ButtonBuy">
                                <a href="#">Comprar</a>
                              </div>
-                         
-                       </div>
-                        `;
+                         </div>
+                      `;
     });
 
     contenedor.innerHTML = resultados;
   }
 };
 
-//------------------->
-
-//QUERY ALL CATEGORY
-axios
-  .get(urlCat)
-  .then((res) => mostrarLinks(res.data))
-  .catch((error) => console.log(error));
+//QUERY ALL PRODUCT
+allProducts(mostrarContenido);
 
 //RENDER ALL CATEGORY
 const mostrarLinks = (cat) => {
   cat.forEach((item) => {
-    resultadosCategorias += `    
-                             <li id="${item.id}" class="itemLink">${item.name}</li>
-                        `;
+    resultadosCategorias += ` <li id="${item.id}" class="itemLink">${item.name}</li> `;
   });
   contenedorNav.innerHTML = resultadosCategorias;
 
   const itemLink = document.querySelectorAll("#nav li");
 
+  //RENDER CATEGORY SELECT
   itemLink.forEach((item) => {
     item.addEventListener("click", (e) => {
       const id = e.target.id;
-
       resultados = "";
       contenedor.innerHTML = "";
       menu.classList.toggle("active");
       iconBars.classList.toggle("fa-close");
-      axios
-        .get(`http://localhost:8080/api/category/${id}`)
-        .then((res) => mostrarCategory(res.data))
-        .catch((error) => console.log(error));
+      oneCategory(mostrarContenido, id);
+      mostrarContenido();
     });
-
-    const mostrarCategory = (product) => {
-      product.forEach((item) => {
-        resultados += `  
-                         <div id="celda" class="card">
-                             <div class="contenedorImg"> 
-                               
-                                <img class="img" src=${item.url_image}>
-                              </div>
-                              <div>
-                                <h3 class="titulo">${item.name}</h3>
-                              </div>
-                             <div>
-                             <p> $ ${item.price}</p>
-                               </div>
-
-                               <div class="ButtonBuy">
-                               <a href="#">Comprar</a>
-                           </div>
-                              </div>
-                            `;
-      });
-      contenedor.innerHTML = resultados;
-    };
   });
 };
 
-//LOGO HOME
+//QUERY ALL CATEGORY
+allCategory(mostrarLinks);
 
+//BUTTON HOME
 iconHome.addEventListener("click", () => {
   resultados = "";
   contenedor.innerHTML = "";
-
-  axios
-    .get(url)
-    .then((res) => mostrarContenido(res.data))
-    .catch((error) => console.log(error));
-
+  allProducts(mostrarContenido);
   mostrarContenido();
-
   menu.classList.toggle("active");
   iconBars.classList.toggle("fa-close");
 });
 
-//BUSQUEDA HOME
-
+//SEARCH
 let texto;
 
 inputBuscar.addEventListener("keyup", (e) => {
   let valor = e.target.value;
   texto = new RegExp(valor, "i");
   const keycode = e.keyCode || e.which;
-  if (keycode == 13) {
-    let name = texto.source;
+  let name = texto.source;
+
+  if (keycode == 13 && texto !== undefined && texto !== " ") {
     resultados = "";
     contenedor.innerHTML = "";
-    axios
-      .get(`http://localhost:8080/api/search/product/${name}`)
-      .then((res) => mostrarContenido(res.data))
-      .catch((error) => console.log(error));
     inputBuscar.value = "";
+    searchProducts(mostrarContenido, name);
     mostrarContenido();
   }
 });
 
 starSearch.addEventListener("click", () => {
   const name = texto.source;
-  resultados = "";
-  contenedor.innerHTML = "";
-  axios
-    .get(`http://localhost:8080/api/search/product/${name}`)
-    .then((res) => mostrarContenido(res.data))
-    .catch((error) => console.log(error));
-  inputBuscar.value = "";
-  mostrarContenido();
+  if (texto !== undefined) {
+    resultados = "";
+    contenedor.innerHTML = "";
+    inputBuscar.value = "";
+    searchProducts(mostrarContenido, name);
+    mostrarContenido();
+  }
 });

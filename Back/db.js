@@ -14,10 +14,10 @@ function keepAlive() {
       return;
     }
     console.log("Base de datos en stand by");
-    connection.ping(); 
+    connection.ping();
     connection.release();
   });
 }
-setInterval(keepAlive, 60000); 
+setInterval(keepAlive, 60000);
 
 module.exports = pool;
